@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  anonimizar:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 5058:5058
+    volumes:
+      - .:/app:Z

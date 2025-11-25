@@ -1,0 +1,8 @@
+venv
+*cfg
+**/__pycache__/
+tests/
+*.zip
+dados
+*.csv
+modelos
