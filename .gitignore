@@ -1,4 +1,4 @@
-venv
+venv/
 *cfg
 **/__pycache__/
 tests/
@@ -6,3 +6,4 @@ tests/
 dados
 *.csv
 modelos
+.vscode/
