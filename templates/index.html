@@ -3,28 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/style.css">
     <title>Comparar Petição com Metadados</title>
 </head>
 <body>
-    <form>
-        <label for="peticao_inicial">Escolher petição inicial</label><br>
-        <input type="file" name="peticao" id="peticao_inicial"><br>
+    <div class="formulario">
+        <form action="/auditoria_metadados/comparar_peticao_metadados" method="post" enctype="multipart/form-data">
+            <label for="peticao_inicial">Escolher petição inicial</label><br>
+            <input type="file" name="peticao" id="peticao_inicial"><br><br>
 
-        <label for="polo_ativo_input">Polo (s) ativo (s)</label><br>
-        <input type="text" name="meta_nome_autor" id="polo_ativo_input"><br>
+            Obs.: para múltiplos autores e réus, separá-los com vírgula (",")<br><br>
 
-        <label for="polo_passivo_input">Polo (s) passivo (s)</label><br>
-        <input type="text" name="meta_nome_reu" id="polo_passivo_input"><br>
+            <label for="polo_ativo_input">Polo (s) ativo (s)</label><br>
+            <input type="text" name="meta_nome_autor" id="polo_ativo_input"><br>
 
-        <label for="id_ativo_input">CPF/CNPJ do (s) polo (s) ativo (s)</label><br>
-        <input type="text" name="meta_id_autor" id="id_ativo_input"><br>
+            <label for="polo_passivo_input">Polo (s) passivo (s)</label><br>
+            <input type="text" name="meta_nome_reu" id="polo_passivo_input"><br>
 
-        <label for="id_passivo_input">CPF/CNPJ do (s) polo (s) passivo (s)</label><br>
-        <input type="text" name="meta_id_reu" id="id_passivo_input"><br>
+            <label for="id_ativo_input">CPF/CNPJ do (s) polo (s) ativo (s)</label><br>
+            <input type="text" name="meta_id_autor" id="id_ativo_input"><br>
 
-        <input type="submit" value="Enviar">
+            <label for="id_passivo_input">CPF/CNPJ do (s) polo (s) passivo (s)</label><br>
+            <input type="text" name="meta_id_reu" id="id_passivo_input"><br>
 
-        <input type="reset" value="Apagar tudo">
-    </form>
+            <input type="submit" value="Enviar">
+
+            <input type="reset" value="Apagar tudo">
+        </form>
+    </div>
+
+    <hr>
+    <hr>
+
+    {% if resultado %}
+        <div class="resultado">
+            <p>
+                <h2>Todos os metadados foram reconhecidos na petição?</h2>
+                <h3 class="{{ 'sucesso' if resultado.sucesso_geral else 'erro' }}">
+                    {{ 'SIM' if resultado.sucesso_geral else 'NÃO' }}
+                </h3>
+                
+                <br>
+
+                <ul>
+                    <h4>Comparação de CPF/CNPJ</h4>
+                    {% for id in resultado.comparacao_ids %}
+                        <li class="{{ id.classe_css }}">{{ id.alvo }}: {{ id.status }}</li>
+                    {% endfor %}
+                </ul>
+
+                <hr>
+                
+                <ul>
+                    <h4>Comparação de nomes</h4>
+                    {% for nome in resultado.comparacao_nomes %}
+                        <li class="{{ nome.classe_css }}">{{ nome.alvo }}: {{ nome.status }}</li>
+                    {% endfor %}
+                </ul>
+
+                <hr>
+
+                <ol>
+                    <h4>CPF/CNPJ reconhecidos</h4>
+                    {% for i in resultado.ids_extraidos %}
+                        <li>{{ i }}</li>
+                    {% endfor %}
+                </ol>
+
+                <hr>
+
+                <ol>
+                    <h4>Nomes de autores e réus reconhecidos</h4>
+                    {% for n in resultado.nomes_extraidos %}
+                        <li>{{ n }}</li>
+                    {% endfor %}
+                </ol>
+
+                <hr>
+            </p>
+        </div>
+    {% endif %}
 </body>
 </html>

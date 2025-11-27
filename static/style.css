@@ -1,0 +1,17 @@
+.formulario {
+    background-color: gray;
+}
+
+.resultado {
+    background-color: bisque;
+}
+
+.sucesso {
+    color: lime;
+    font-weight: bold;
+}
+
+.erro {
+    color: red;
+    font-weight: bold;
+}
