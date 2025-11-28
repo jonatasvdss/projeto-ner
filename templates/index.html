@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="static/style.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <title>Comparar Petição com Metadados</title>
 </head>
 <body>
     <div class="formulario">
         <form action="/auditoria_metadados/comparar_peticao_metadados" method="post" enctype="multipart/form-data">
-            <label for="peticao_inicial">Escolher petição inicial</label><br>
+            <label for="peticao_inicial">Escolher petição inicial (apenas pdf)</label><br>
             <input type="file" name="peticao" id="peticao_inicial"><br><br>
 
-            Obs.: para múltiplos autores e réus, separá-los com vírgula (",")<br><br>
+            Obs.: Para múltiplos dados de autores e réus, separe-os com um jogo da velha ("#")<br><br>
 
             <label for="polo_ativo_input">Polo (s) ativo (s)</label><br>
             <input type="text" name="meta_nome_autor" id="polo_ativo_input"><br>
@@ -32,55 +32,57 @@
         </form>
     </div>
 
-    <hr>
-    <hr>
+    {% if erro %}
+        <div style="background-color: #ffcccc; color: red; padding: 10px; border: 1px solid red; margin-bottom: 15px;">
+            <strong>ERRO:</strong> {{ erro }}
+        </div>
+    {% endif %}
 
     {% if resultado %}
         <div class="resultado">
-            <p>
-                <h2>Todos os metadados foram reconhecidos na petição?</h2>
-                <h3 class="{{ 'sucesso' if resultado.sucesso_geral else 'erro' }}">
-                    {{ 'SIM' if resultado.sucesso_geral else 'NÃO' }}
-                </h3>
-                
-                <br>
+            <h2>Todos os metadados foram reconhecidos na petição?</h2>
+            <h3 class="{{ 'sucesso' if resultado.sucesso_geral else 'erro' }}">
+                {{ 'SIM' if resultado.sucesso_geral else 'NÃO' }}
+            </h3>
+            
+            <br>
 
-                <ul>
-                    <h4>Comparação de CPF/CNPJ</h4>
-                    {% for id in resultado.comparacao_ids %}
-                        <li class="{{ id.classe_css }}">{{ id.alvo }}: {{ id.status }}</li>
-                    {% endfor %}
-                </ul>
+            <ul>
+                <h4>Comparação de CPF/CNPJ</h4>
+                {% for id_meta in resultado.comparacao_ids %}
+                    <li class="{{ id_meta.classe }}">{{ id_meta.alvo }}: {{ id_meta.status }}</li>
+                {% endfor %}
+            </ul>
 
-                <hr>
-                
-                <ul>
-                    <h4>Comparação de nomes</h4>
-                    {% for nome in resultado.comparacao_nomes %}
-                        <li class="{{ nome.classe_css }}">{{ nome.alvo }}: {{ nome.status }}</li>
-                    {% endfor %}
-                </ul>
+            <hr>
+            
+            <ul>
+                <h4>Comparação de nomes</h4>
+                {% for nome_meta in resultado.comparacao_nomes %}
+                    <li class="{{ nome_meta.classe }}">{{ nome_meta.alvo }}: {{ nome_meta.status }}</li>
+                {% endfor %}
+            </ul>
 
-                <hr>
+            <hr>
+            <hr>
 
-                <ol>
-                    <h4>CPF/CNPJ reconhecidos</h4>
-                    {% for i in resultado.ids_extraidos %}
-                        <li>{{ i }}</li>
-                    {% endfor %}
-                </ol>
+            <ol>
+                <h4>CPF/CNPJ reconhecidos</h4>
+                {% for id_extraido in resultado.ids_extraidos %}
+                    <li>{{ id_extraido }}</li>
+                {% endfor %}
+            </ol>
 
-                <hr>
+            <hr>
 
-                <ol>
-                    <h4>Nomes de autores e réus reconhecidos</h4>
-                    {% for n in resultado.nomes_extraidos %}
-                        <li>{{ n }}</li>
-                    {% endfor %}
-                </ol>
+            <ol>
+                <h4>Nomes de autores e réus reconhecidos</h4>
+                {% for nome_extraido in resultado.nomes_extraidos %}
+                    <li>{{ nome_extraido }}</li>
+                {% endfor %}
+            </ol>
 
-                <hr>
-            </p>
+            <hr>
         </div>
     {% endif %}
 </body>

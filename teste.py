@@ -2,7 +2,7 @@ import pandas as pd
 from services.comparar_metadados import peticao_contem_metadados
 import sys
 
-df = pd.read_csv("/app/metadado_peticoes_iniciais_13112025.csv")
+df = pd.read_csv("/app/dados/metadado_peticoes_iniciais_13112025.csv")
 
 df.drop(columns=["comarca", "serventia", "classe", "assunto"], inplace=True)
 
@@ -17,13 +17,16 @@ if __name__ == "__main__":
       meta_nome_reu = linha["polo_passivo"]
       meta_id_reu = linha["cpf_cnpj_polo_passivo"]
 
-      peticao_contem_metadados(
+      resultado, _ = peticao_contem_metadados(
         peticao,
         meta_nome_autor,
         meta_id_autor,
         meta_nome_reu,
         meta_id_reu
       )
+
+      print(resultado)
+
     except IndexError:
        print("Índice deve ser no mínimo 0 e no máximo 999!")
     except Exception as e:

@@ -12,6 +12,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-EXPOSE 5058
+# EXPOSE 5058
 
-ENTRYPOINT ["gunicorn", "--bind", "0.0.0.0:5058", "--timeout", "600000", "app:app"]
+# ENTRYPOINT ["gunicorn", "--bind", "0.0.0.0:5058", "--timeout", "600000", "app:app"]

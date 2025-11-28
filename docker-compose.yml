@@ -9,3 +9,4 @@ services:
       - 5058:5058
     volumes:
       - .:/app:Z
+    command: python app.py

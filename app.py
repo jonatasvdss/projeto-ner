@@ -4,10 +4,11 @@ from routes import routes_bp
 from routes.comparar import comparar_bp
 
 app = Flask(__name__)
+app.config['TEMPLATES_AUTO_RELOAD'] = True
 CORS(app)
 
 app.register_blueprint(routes_bp)
 app.register_blueprint(comparar_bp, url_prefix='/auditoria_metadados')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5058, debug=False)
+    app.run(host='0.0.0.0', port=5058, debug=True)

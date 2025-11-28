@@ -4,7 +4,6 @@ import difflib
 import unicodedata
 from services.gerenciador_documento import GerenciadorDocumento
 
-# ... (Mantenha as funções auxiliares normalizar_id, normalizar_nome e calcular_similaridade iguais) ...
 def normalizar_id(id_val):
     if pd.isna(id_val) or id_val == "": return ""
     s = str(id_val)
@@ -24,13 +23,12 @@ def calcular_similaridade(texto1, texto2):
 
 def peticao_contem_metadados(
         peticao: str, 
-        meta_nome_autor: str, 
+        meta_nome_autor: str,
         meta_id_autor, 
         meta_nome_reu: str, 
         meta_id_reu
-    ) -> tuple[dict, bool]:  # <--- Mudança no tipo de retorno
+    ) -> tuple[dict, bool]:
     
-    # ... (Mantenha a lógica de limpeza inicial da petição igual) ...
     if pd.isna(peticao):
         peticao_limpa = ""
     else:
@@ -38,7 +36,6 @@ def peticao_contem_metadados(
         s = re.sub(r"#####fim#####.*", "", s)
         peticao_limpa = re.sub(r'\s+', ' ', s).strip()
     
-    # ... (Mantenha o processamento e extração igual) ...
     processor = GerenciadorDocumento(peticao_limpa)
     processor.preprocessar()
     processor.extrair_entidades()
@@ -46,7 +43,6 @@ def peticao_contem_metadados(
     processor.extrair_entidades_lgpd()
     entidades_extraidas = processor.get_entidades()
     
-    # ... (Mantenha a construção dos pools igual) ...
     pool_ids_encontrados = set()
     pool_nomes_encontrados_bruto = set()
     for ent in entidades_extraidas:
@@ -61,33 +57,29 @@ def peticao_contem_metadados(
         if not any(nome in nome_maior for nome_maior in pool_nomes_encontrados):
             pool_nomes_encontrados.add(nome)
 
-    # ... (Mantenha a preparação dos metadados igual) ...
     def listar_metadados_esperados(valor_bruto, tipo):
         lista_final = []
         if pd.isna(valor_bruto): return lista_final
         valores = str(valor_bruto).split("#")
-        for v in valores:
-            norm = normalizar_id(v) if tipo == 'id' else normalizar_nome(v)
+        for valor in valores:
+            norm = normalizar_id(valor) if tipo == 'id' else normalizar_nome(valor)
             if norm: lista_final.append(norm)
         return lista_final
+
 
     ids_esperados = (listar_metadados_esperados(meta_id_autor, 'id') + listar_metadados_esperados(meta_id_reu, 'id'))
     nomes_esperados = (listar_metadados_esperados(meta_nome_autor, 'nome') + listar_metadados_esperados(meta_nome_reu, 'nome'))
 
-    # --- 4. Verificação e Construção do Objeto de Resposta ---
     todos_encontrados = True
     
-    # Listas de dicionários para o HTML
     detalhes_ids = []
     detalhes_nomes = []
     
     LIMIAR_SIMILARIDADE = 0.85 
 
-    # --- Verificação IDs ---
     for id_target in ids_esperados:
         encontrado = id_target in pool_ids_encontrados
         
-        # Define classe CSS e texto baseado no resultado
         status_texto = "ENCONTRADO" if encontrado else "AUSENTE"
         classe_css = "sucesso" if encontrado else "erro"
         
@@ -100,7 +92,6 @@ def peticao_contem_metadados(
         if not encontrado:
             todos_encontrados = False
 
-    # --- Verificação Nomes ---
     for nome_target in nomes_esperados:
         encontrado = False
         match_info = ""
@@ -150,7 +141,6 @@ def peticao_contem_metadados(
         if not encontrado:
             todos_encontrados = False
 
-    # 5. Retorno Estruturado
     resultado_final = {
         'sucesso_geral': todos_encontrados,
         'comparacao_ids': detalhes_ids,
