@@ -7,3 +7,4 @@ dados
 *.csv
 modelos
 .vscode/
+requirements-local.txt

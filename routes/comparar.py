@@ -40,6 +40,6 @@ def index():
             
         except Exception as e:
             logging.error(f"Erro ao processar petição: {e}")
-            return render_template('index.html', resultado=None, erro=f"Erro: {str(e)}")
+            return render_template('index.html', resultado=None, erro=str(e))
 
     return render_template('index.html', resultado=resultado)

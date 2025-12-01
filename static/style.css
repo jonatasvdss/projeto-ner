@@ -1,5 +1,22 @@
+body {
+    background-color: rgb(136, 136, 136);
+}
+
+label {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+input {
+    margin-top: 5px;
+    margin-bottom: 15px;
+    width: 300px;
+}
+
 .formulario {
-    background-color: gray;
+    background-color: rgb(216, 216, 216);
+    padding-left: 10px;
+    padding-top: 15px;
 }
 
 .resultado {
@@ -14,4 +31,18 @@
 .erro {
     color: red;
     font-weight: bold;
+}
+
+#botao_submit, #botao_reset {
+    font-weight: bold;
+    background-color: rgb(199, 199, 199);
+    margin-top: 25px;
+    height: 50px;
+    width: 150px;
+    border-style: double;
+    cursor: pointer;
+}
+
+#botao_submit:hover, #botao_reset:hover {
+    background-color: rgb(241, 255, 231);
 }

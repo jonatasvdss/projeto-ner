@@ -26,14 +26,14 @@
             <label for="id_passivo_input">CPF/CNPJ do (s) polo (s) passivo (s)</label><br>
             <input type="text" name="meta_id_reu" id="id_passivo_input"><br>
 
-            <input type="submit" value="Enviar">
+            <input type="submit" value="Enviar" id="botao_submit">
 
-            <input type="reset" value="Apagar tudo">
+            <input type="reset" value="Apagar tudo" id="botao_reset">
         </form>
     </div>
 
     {% if erro %}
-        <div style="background-color: #ffcccc; color: red; padding: 10px; border: 1px solid red; margin-bottom: 15px;">
+        <div style="background-color: #ffcccc; color: red; padding: 10px; border: 1px solid red; margin-bottom: 15px; margin-top: 5px;">
             <strong>ERRO:</strong> {{ erro }}
         </div>
     {% endif %}
