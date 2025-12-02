@@ -1,7 +1,6 @@
 from .anonimizador_texto import AnonimizadorTexto
 from .processador_texto import ProcessadorTexto
 from .extrator_entidades import ExtratorEntidades
-from .extrator_lgpd import ExtratorLGPD  # Importado por Jônatas Vicente da Silva
 from utils.carregar_modelo_ner import load_model
 from utils.carregar_modelo_bert import load_model_bert, load_tokenizer_bert
 from config.log_config import logger
@@ -14,7 +13,6 @@ class GerenciadorDocumento:
         self.modelo = load_model()
         self.modelo_bert = load_model_bert()
         self.tokenizer = load_tokenizer_bert()
-        self.extrator_lgpd = ExtratorLGPD()
         self.processador = ProcessadorTexto(self.modelo, self.tokenizer)
         self.entidades_extrator = None
         self.entidades = []
@@ -93,29 +91,6 @@ class GerenciadorDocumento:
             self.entidades.extend(entidades_adequadas)
         
         logger.info("Entidades BERT extraídas com sucesso.")
-
-    # Método adicionado por Jônatas Vicente da Silva
-    def extrair_entidades_lgpd(self):
-        """
-        Utiliza o modelo celiudos/legal-bert-lgpd com estratégia de janela deslizante (stride).
-        Processa o texto inteiro, sem necessidade de dividir em sentenças manualmente.
-        """
-        logger.info("Iniciando extração com Legal BERT LGPD...")
-        
-        if not self.extrator_lgpd.pipeline:
-            logger.error("O pipeline LGPD não foi carregado corretamente.")
-            return
-
-        # Passamos o texto inteiro (o stride cuida do tamanho)
-        # Se você fez a limpeza de CR LF (quebra de linha) no peticao_contem_metadados,
-        # self.texto já deve estar limpo.
-        entidades_lgpd = self.extrator_lgpd.extrair(self.texto)
-        
-        # Adiciona as novas entidades à lista principal
-        self.entidades.extend(entidades_lgpd)
-        
-        logger.info(f"Extração LGPD concluída.")
-
 
     def get_entidades(self):
         if not self.entidades:

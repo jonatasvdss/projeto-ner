@@ -40,7 +40,6 @@ def peticao_contem_metadados(
     processor.preprocessar()
     processor.extrair_entidades()
     processor.extrair_entidades_bert()
-    processor.extrair_entidades_lgpd()
     entidades_extraidas = processor.get_entidades()
     
     pool_ids_encontrados = set()
