@@ -67,6 +67,15 @@ ol li {
     font-weight: bold;
 }
 
+.excecao {
+    font-weight: bold;
+    background-color: #ffcccc;
+    color: red;
+    padding: 10px;
+    border: 1px solid red;
+    margin-top: 15px;
+}
+
 #botao_submit, #botao_reset {
     font-weight: bold;
     background-color: rgb(199, 199, 199);

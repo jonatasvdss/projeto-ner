@@ -48,7 +48,7 @@ class ExtratorLGPD:
             resultados = self.pipeline(texto)
             
             for resultado in resultados:
-                if resultado["label"] in ["CPF", "NOME"]:
+                if resultado["entity_group"] in ["CPF", "NOME"]:
                     entidades_formatadas.append({
                         "label": resultado['entity_group'],
                         "texto": resultado['word'],
