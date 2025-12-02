@@ -14,7 +14,7 @@ def index():
     if request.method == 'POST':
         try:
             if 'peticao' not in request.files:
-                return render_template('index.html', resultado=None, erro="Nenhum arquivo enviado.")
+                return render_template('index.html', resultado=None, excecao="Nenhum arquivo enviado.")
 
             peticao_arquivo = request.files['peticao']
             
@@ -40,6 +40,6 @@ def index():
             
         except Exception as e:
             logging.error(f"Erro ao processar petição: {e}")
-            return render_template('index.html', resultado=None, erro=str(e))
+            return render_template('index.html', resultado=None, excecao=str(e))
 
     return render_template('index.html', resultado=resultado)

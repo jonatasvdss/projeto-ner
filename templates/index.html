@@ -32,34 +32,39 @@
         </form>
     </div>
 
-    {% if erro %}
+    {% if excecao %}
         <div style="background-color: #ffcccc; color: red; padding: 10px; border: 1px solid red; margin-bottom: 15px; margin-top: 5px;">
-            <strong>ERRO:</strong> {{ erro }}
+            <strong>ERRO:</strong> {{ excecao }}
         </div>
     {% endif %}
 
     {% if resultado %}
         <div class="resultado">
-            <h2>Todos os metadados foram reconhecidos na petição?</h2>
-            <h3 class="{{ 'sucesso' if resultado.sucesso_geral else 'erro' }}">
+            <h2>TODOS OS METADADOS FORAM RECONHECIDOS NA PETIÇÃO?</h2>
+            <h1 class="{{ 'sucesso' if resultado.sucesso_geral else 'erro' }}" id="sucesso_geral">
                 {{ 'SIM' if resultado.sucesso_geral else 'NÃO' }}
-            </h3>
+            </h1>
             
+            <hr><hr>
             <br>
 
             <ul>
-                <h4>Comparação de CPF/CNPJ</h4>
+                <h3>Comparação de CPF/CNPJ</h3>
                 {% for id_meta in resultado.comparacao_ids %}
-                    <li class="{{ id_meta.classe }}">{{ id_meta.alvo }}: {{ id_meta.status }}</li>
+                    <li>
+                        <span class="metadados">{{ id_meta.alvo }}:</span> <span class="{{ id_meta.classe }}">{{ id_meta.status }}</span>
+                    </li>
                 {% endfor %}
             </ul>
 
             <hr>
             
             <ul>
-                <h4>Comparação de nomes</h4>
+                <h3>Comparação de nomes</h3>
                 {% for nome_meta in resultado.comparacao_nomes %}
-                    <li class="{{ nome_meta.classe }}">{{ nome_meta.alvo }}: {{ nome_meta.status }}</li>
+                    <li>
+                        <span class="metadados">{{ nome_meta.alvo }}:</span> <span class="{{ nome_meta.classe }}">{{ nome_meta.status }}</span>
+                    </li>
                 {% endfor %}
             </ul>
 
@@ -67,18 +72,18 @@
             <hr>
 
             <ol>
-                <h4>CPF/CNPJ reconhecidos</h4>
+                <h3>CPF/CNPJ reconhecidos</h3>
                 {% for id_extraido in resultado.ids_extraidos %}
-                    <li>{{ id_extraido }}</li>
+                    <li class="reconhecidos">{{ id_extraido }}</li>
                 {% endfor %}
             </ol>
 
             <hr>
 
             <ol>
-                <h4>Nomes de autores e réus reconhecidos</h4>
+                <h3>Nomes de autores e réus reconhecidos</h3>
                 {% for nome_extraido in resultado.nomes_extraidos %}
-                    <li>{{ nome_extraido }}</li>
+                    <li class="reconhecidos">{{ nome_extraido }}</li>
                 {% endfor %}
             </ol>
 

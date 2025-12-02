@@ -13,6 +13,14 @@ input {
     width: 300px;
 }
 
+ul li {
+    padding-top: 10px;
+}
+
+ol li {
+    padding-top: 10px;
+}
+
 .formulario {
     background-color: rgb(216, 216, 216);
     padding-left: 10px;
@@ -23,13 +31,39 @@ input {
     background-color: bisque;
 }
 
+.resultado h2 {
+    padding: 10px;
+}
+
+.resultado h3 {
+    text-decoration: underline;
+}
+
 .sucesso {
     color: lime;
     font-weight: bold;
+    background-color: black;
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 5px;
+    margin-left: 10px;
 }
 
 .erro {
     color: red;
+    font-weight: bold;
+    background-color: black;
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 5px;
+    margin-left: 10px;
+}
+
+.metadados {
+    font-weight: bold;
+}
+
+.reconhecidos {
     font-weight: bold;
 }
 
@@ -45,4 +79,9 @@ input {
 
 #botao_submit:hover, #botao_reset:hover {
     background-color: rgb(241, 255, 231);
+}
+
+#sucesso_geral {
+    margin-top: 0px;
+    margin-left: 40px;
 }
