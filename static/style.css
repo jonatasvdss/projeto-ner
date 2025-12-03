@@ -1,5 +1,5 @@
 body {
-    background-color: rgb(136, 136, 136);
+    background-color: rgb(184, 184, 184);
 }
 
 label {
@@ -61,10 +61,12 @@ ol li {
 
 .metadados {
     font-weight: bold;
+    padding-left: 10px;
 }
 
 .reconhecidos {
     font-weight: bold;
+    padding-left: 10px;
 }
 
 .excecao {
@@ -83,6 +85,7 @@ ol li {
     height: 50px;
     width: 150px;
     border-style: double;
+    border-radius: 5px;
     cursor: pointer;
 }
 
