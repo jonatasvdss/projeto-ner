@@ -47,48 +47,56 @@
             
             <hr><hr>
             <br>
+            <div class="comparacao">
+                <ul>
+                    <h3>Comparação de CPF/CNPJ</h3>
+                    {% for id_meta in resultado.comparacao_ids %}
+                        <li>
+                            <span class="metadados">{{ id_meta.alvo }}:</span> <span class="{{ id_meta.classe }}">{{ id_meta.status }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
 
-            <ul>
-                <h3>Comparação de CPF/CNPJ</h3>
-                {% for id_meta in resultado.comparacao_ids %}
-                    <li>
-                        <span class="metadados">{{ id_meta.alvo }}:</span> <span class="{{ id_meta.classe }}">{{ id_meta.status }}</span>
-                    </li>
-                {% endfor %}
-            </ul>
-
-            <hr>
-            
-            <ul>
-                <h3>Comparação de nomes</h3>
-                {% for nome_meta in resultado.comparacao_nomes %}
-                    <li>
-                        <span class="metadados">{{ nome_meta.alvo }}:</span> <span class="{{ nome_meta.classe }}">{{ nome_meta.status }}</span>
-                    </li>
-                {% endfor %}
-            </ul>
-
-            <hr>
-            <hr>
-
-            <ol>
-                <h3>CPF/CNPJ reconhecidos</h3>
-                {% for id_extraido in resultado.ids_extraidos %}
-                    <li class="reconhecidos">{{ id_extraido }}</li>
-                {% endfor %}
-            </ol>
+                <hr>
+                
+                <ul>
+                    <h3>Comparação de nomes</h3>
+                    {% for nome_meta in resultado.comparacao_nomes %}
+                        <li>
+                            <span class="metadados">{{ nome_meta.alvo }}:</span> <span class="{{ nome_meta.classe }}">{{ nome_meta.status }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
 
             <hr>
+            <hr>
 
-            <ol>
-                <h3>Nomes de autores e réus reconhecidos</h3>
-                {% for nome_extraido in resultado.nomes_extraidos %}
-                    <li class="reconhecidos">{{ nome_extraido }}</li>
-                {% endfor %}
-            </ol>
+            <div class="reconhecidos">
+                <ol>
+                    <h3>CPF/CNPJ reconhecidos</h3>
+                    {% for id_extraido in resultado.ids_extraidos %}
+                        <li class="items_reconhecidos">{{ id_extraido }}</li>
+                    {% endfor %}
+                </ol>
+
+                <hr>
+
+                <ol>
+                    <h3>Nomes de autores e réus reconhecidos</h3>
+                    {% for nome_extraido in resultado.nomes_extraidos %}
+                        <li class="items_reconhecidos">{{ nome_extraido }}</li>
+                    {% endfor %}
+                </ol>
+            </div>
 
             <hr>
         </div>
+        <div>
+            <button id="botao_baixar">Baixar como PDF</button>
+        </div>
     {% endif %}
+    
+    <script src="{{ url_for('static', filename='main.js') }}"></script>
 </body>
 </html>
