@@ -40,13 +40,27 @@
 
     {% if resultado %}
         <div class="resultado">
-            <h2>TODOS OS METADADOS FORAM RECONHECIDOS NA PETIÇÃO?</h2>
-            <h1 class="{{ 'sucesso' if resultado.sucesso_geral else 'erro' }}" id="sucesso_geral">
-                {{ 'SIM' if resultado.sucesso_geral else 'NÃO' }}
-            </h1>
-            
-            <hr><hr>
-            <br>
+            <div class="reconhecidos">
+                <ol>
+                    <h3>CPF/CNPJ reconhecidos</h3>
+                    {% for id_extraido in resultado.ids_extraidos %}
+                        <li class="items_reconhecidos">{{ id_extraido }}</li>
+                    {% endfor %}
+                </ol>
+
+                <hr>
+
+                <ol>
+                    <h3>Nomes de autores e réus reconhecidos</h3>
+                    {% for nome_extraido in resultado.nomes_extraidos %}
+                        <li class="items_reconhecidos">{{ nome_extraido }}</li>
+                    {% endfor %}
+                </ol>
+            </div>
+
+            <hr>
+            <hr>
+
             <div class="comparacao">
                 <ul>
                     <h3>Comparação de CPF/CNPJ</h3>
@@ -70,28 +84,9 @@
             </div>
 
             <hr>
-            <hr>
-
-            <div class="reconhecidos">
-                <ol>
-                    <h3>CPF/CNPJ reconhecidos</h3>
-                    {% for id_extraido in resultado.ids_extraidos %}
-                        <li class="items_reconhecidos">{{ id_extraido }}</li>
-                    {% endfor %}
-                </ol>
-
-                <hr>
-
-                <ol>
-                    <h3>Nomes de autores e réus reconhecidos</h3>
-                    {% for nome_extraido in resultado.nomes_extraidos %}
-                        <li class="items_reconhecidos">{{ nome_extraido }}</li>
-                    {% endfor %}
-                </ol>
-            </div>
-
-            <hr>
+            
         </div>
+
         <div>
             <button id="botao_baixar">Baixar como PDF</button>
         </div>
