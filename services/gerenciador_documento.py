@@ -1,4 +1,3 @@
-from .anonimizador_texto import AnonimizadorTexto
 from .processador_texto import ProcessadorTexto
 from .extrator_entidades import ExtratorEntidades
 from utils.carregar_modelo_ner import load_model
@@ -14,16 +13,14 @@ class GerenciadorDocumento:
         self.modelo_bert = load_model_bert()
         self.tokenizer = load_tokenizer_bert()
         self.processador = ProcessadorTexto(self.modelo, self.tokenizer)
-        self.entidades_extrator = None
+        self.entidades_extrator = []
         self.entidades = []
         self.sentencas = []
         logger.info("Anonimizador de Documento inicializado.")
 
     def preprocessar(self):
         try:
-            print(len(self.texto))
             self.sentencas = self.processador.dividir_texto_em_sentenca(self.texto)
-            print(len(self.sentencas))
             docs_generator = self.processador.gerar_docs_spacy()
             
             self.entidades_extrator = []
@@ -60,7 +57,7 @@ class GerenciadorDocumento:
 
             entities = []
             current_entity = {"label": None, "texto": ""}
-            for idx, (token, prediction, offsets) in enumerate(zip(tokens, predictions[0].numpy(), offset_mapping)):
+            for _, (token, prediction, offsets) in enumerate(zip(tokens, predictions[0].numpy(), offset_mapping)):
                 label = self.modelo_bert.config.id2label[prediction]
                 start, end = offsets.tolist()
 
@@ -88,6 +85,7 @@ class GerenciadorDocumento:
             for ent in entities:
                 if (ent['label'] in ['ORGANIZACAO', 'PESSOA'] and len(re.findall(r'[a-zA-Z0-9]', ent['texto'])) > 3) or (ent['label'] == 'LOCAL' and len(ent['texto']) > 5):
                     entidades_adequadas.append(ent)
+
             self.entidades.extend(entidades_adequadas)
         
         logger.info("Entidades BERT extraídas com sucesso.")
@@ -96,9 +94,5 @@ class GerenciadorDocumento:
         if not self.entidades:
             logger.debug("Entidades não extraídas, chamando extrair_entidades()")
             self.extrair_entidades()
-        return self.entidades
-    
-    def anonimizar_texto(self):
-        anonimizar = AnonimizadorTexto(self.texto, self.entidades)
         
-        return anonimizar.anonimizar()
+        return self.entidades
