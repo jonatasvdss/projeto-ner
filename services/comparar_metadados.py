@@ -34,13 +34,40 @@ def calcular_similaridade(texto1, texto2):
 
 
 def peticao_contem_metadados(
-        peticao: str, 
+        peticao: str,
         meta_nome_autor: str,
-        meta_id_autor, 
-        meta_nome_reu: str, 
-        meta_id_reu
+        meta_id_autor: str | int,
+        meta_nome_reu: str,
+        meta_id_reu: str | int
     ) -> Resultado:
-    
+    """
+    Compara os metadados fornecidos com os nomes, CPFs e CNPJs reconhecidos na petição inicial
+    por modelos spaCy e BERT.
+
+    Se algum dos metadados contiver mais de um valor, deve-se separá-los com "#".
+    Ex.: meta_nome_autor="João Pedro#Maria da Silva#Gabriel Vilela".
+
+    :param peticao: Texto da petição inicial.
+    :type peticao: str
+    :param meta_nome_autor: Nome(s) do(s) polo(s) ativo(s).
+    :type meta_nome_autor: str
+    :param meta_id_autor: Identificador(es) do(s) polo(s) ativo(s).
+    :type meta_id_autor: str | int
+    :param meta_nome_reu: Nome(s) do(s) polo(s) passivo(s).
+    :type meta_nome_reu: str
+    :param meta_id_reu: Identificador(es) do(s) polo(s) passivo(s).
+    :type meta_id_reu: str | int
+
+    :return: Objeto contendo os resultados da auditoria com os seguintes atributos:
+
+        * **sucesso_geral (bool):** Indica se todos os metadados esperados foram encontrados.
+        * **comparacao_ids (list[dict]):** Lista detalhada da verificação de cada CPF/CNPJ.
+        * **comparacao_nomes (list[dict]):** Lista detalhada da verificação de cada nome.
+        * **ids_extraidos (list[str]):** Lista bruta de todos os IDs encontrados pelos modelos.
+        * **nomes_extraidos (list[str]):** Lista bruta de todos os nomes encontrados pelos modelos.
+    :rtype: services.resultado_comparacao.Resultado
+    """
+
     if pd.isna(peticao):
         peticao_limpa = ""
     else:
