@@ -1,8 +1,12 @@
-import pandas as pd
 import re
 import difflib
 import unicodedata
+
+import pandas as pd
+
 from services.gerenciador_documento import GerenciadorDocumento
+from services.resultado_comparacao import Resultado
+
 
 def normalizar_id(id_val):
     if pd.isna(id_val) or id_val == "" or id_val == "0":
@@ -35,7 +39,7 @@ def peticao_contem_metadados(
         meta_id_autor, 
         meta_nome_reu: str, 
         meta_id_reu
-    ) -> tuple[dict, bool]:
+    ) -> Resultado:
     
     if pd.isna(peticao):
         peticao_limpa = ""
@@ -127,7 +131,7 @@ def peticao_contem_metadados(
                 
                 if len(nome_extraido) > 2:
                     padrao = r"\b" + re.escape(nome_extraido) + r"\b"
-                    
+
                     if re.search(padrao, nome_target):
                         encontrado = True
                         match_info = "(Parcial)"
@@ -164,12 +168,12 @@ def peticao_contem_metadados(
         if not encontrado:
             todos_encontrados = False
 
-    resultado_final = {
-        'sucesso_geral': todos_encontrados,
-        'comparacao_ids': detalhes_ids,
-        'comparacao_nomes': detalhes_nomes,
-        'ids_extraidos': sorted(list(pool_ids_encontrados)),
-        'nomes_extraidos': sorted(list(pool_nomes_encontrados))
-    }
+    resultado_final = Resultado(
+            sucesso_geral=todos_encontrados,
+            comparacao_ids=detalhes_ids,
+            comparacao_nomes=detalhes_nomes,
+            ids_extraidos=sorted(list(pool_ids_encontrados)),
+            nomes_extraidos=sorted(list(pool_nomes_encontrados))
+            )
 
-    return resultado_final, todos_encontrados
+    return resultado_final
