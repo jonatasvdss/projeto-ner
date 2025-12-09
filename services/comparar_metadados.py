@@ -5,21 +5,29 @@ import unicodedata
 from services.gerenciador_documento import GerenciadorDocumento
 
 def normalizar_id(id_val):
-    if pd.isna(id_val) or id_val == "": return ""
+    if pd.isna(id_val) or id_val == "" or id_val == "0":
+        return ""
+    
     s = str(id_val)
-    if s.endswith(".0"): s = s[:-2]
     apenas_digitos = re.sub(r"[^\d]", "", s)
+
     return str(int(apenas_digitos)) if apenas_digitos else ""
 
+
 def normalizar_nome(nome):
-    if pd.isna(nome) or nome == "": return ""
+    if pd.isna(nome) or nome == "":
+        return ""
+    
     s = str(nome).strip().lower()
     s = re.sub(r'[^\w\s]', '', s)
     nfkd_form = unicodedata.normalize('NFKD', s)
+
     return "".join([c for c in nfkd_form if not unicodedata.combining(c)])
+
 
 def calcular_similaridade(texto1, texto2):
     return difflib.SequenceMatcher(None, texto1, texto2).ratio()
+
 
 def peticao_contem_metadados(
         peticao: str, 
@@ -44,6 +52,7 @@ def peticao_contem_metadados(
     
     pool_ids_encontrados = set()
     pool_nomes_encontrados_bruto = set()
+
     for ent in entidades_extraidas:
         if ent["label"] in ["CPF", "CNPJ"]:
             pool_ids_encontrados.add(normalizar_id(ent["texto"]))
@@ -58,23 +67,34 @@ def peticao_contem_metadados(
 
     def listar_metadados_esperados(valor_bruto, tipo):
         lista_final = []
-        if pd.isna(valor_bruto): return lista_final
+
+        if pd.isna(valor_bruto):
+            return lista_final
+        
         valores = str(valor_bruto).split("#")
+
         for valor in valores:
             norm = normalizar_id(valor) if tipo == 'id' else normalizar_nome(valor)
-            if norm: lista_final.append(norm)
+            if norm:
+                lista_final.append(norm)
+
         return lista_final
 
-
-    ids_esperados = (listar_metadados_esperados(meta_id_autor, 'id') + listar_metadados_esperados(meta_id_reu, 'id'))
-    nomes_esperados = (listar_metadados_esperados(meta_nome_autor, 'nome') + listar_metadados_esperados(meta_nome_reu, 'nome'))
+    ids_esperados = (
+        listar_metadados_esperados(meta_id_autor, 'id')
+        + listar_metadados_esperados(meta_id_reu, 'id')
+        )
+    nomes_esperados = (
+        listar_metadados_esperados(meta_nome_autor, 'nome')
+        + listar_metadados_esperados(meta_nome_reu, 'nome')
+        )
 
     todos_encontrados = True
     
     detalhes_ids = []
     detalhes_nomes = []
     
-    LIMIAR_SIMILARIDADE = 0.85 
+    LIMIAR_SIMILARIDADE = 0.85
 
     for id_target in ids_esperados:
         encontrado = id_target in pool_ids_encontrados
@@ -107,6 +127,7 @@ def peticao_contem_metadados(
                 
                 if len(nome_extraido) > 2:
                     padrao = r"\b" + re.escape(nome_extraido) + r"\b"
+                    
                     if re.search(padrao, nome_target):
                         encontrado = True
                         match_info = "(Parcial)"
@@ -115,14 +136,17 @@ def peticao_contem_metadados(
                 tokens_target = set(nome_target.split())
                 tokens_extraido = set(nome_extraido.split())
                 interseccao = tokens_target.intersection(tokens_extraido)
+
                 if len(tokens_target) > 0:
                     ratio_token = len(interseccao) / len(tokens_target)
+
                     if len(interseccao) >= 2 and ratio_token >= 0.6:
                         encontrado = True
                         match_info = f"(Tokens {len(interseccao)}/{len(tokens_target)})"
                         break
 
                 score = calcular_similaridade(nome_target, nome_extraido)
+
                 if score >= LIMIAR_SIMILARIDADE:
                     encontrado = True
                     match_info = f"(Similaridade {score:.2f})"
