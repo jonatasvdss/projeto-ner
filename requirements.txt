@@ -48,4 +48,4 @@ wrapt==1.16.0
 transformers
 torch
 pandas==2.2.3
-pypdf==5.1.0
+pdfplumber==0.11.8

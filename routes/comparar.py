@@ -1,8 +1,6 @@
-# Rota implementada por Jônatas Vicente da Silva
-
-from flask import Blueprint, render_template, request, flash
+from flask import Blueprint, render_template, request
 from services.comparar_metadados import peticao_contem_metadados
-from pypdf import PdfReader
+import pdfplumber
 import logging
 
 comparar_bp = Blueprint('comparar', __name__)
@@ -10,6 +8,7 @@ comparar_bp = Blueprint('comparar', __name__)
 @comparar_bp.route('/comparar_peticao_metadados', methods=['GET', 'POST'])
 def index():
     resultado = None
+    excecao = None
     
     if request.method == 'POST':
         try:
@@ -23,14 +22,14 @@ def index():
             meta_id_autor = request.form.get('meta_id_autor', '')
             meta_id_reu = request.form.get('meta_id_reu', '')
 
-            leitor_pdf = PdfReader(peticao_arquivo.stream)
             peticao_texto = ''
+            
+            with pdfplumber.open(peticao_arquivo.stream) as pdf:
+                for pagina in pdf.pages:
+                    texto_pagina = pagina.extract_text(x_tolerance=3) or ""
+                    peticao_texto += texto_pagina + '\n'
 
-            for pagina in leitor_pdf.pages:
-                texto_pagina = pagina.extract_text() or ""
-                peticao_texto += texto_pagina + '\n'
-
-            resultado, _ = peticao_contem_metadados(
+            resultado = peticao_contem_metadados(
                 peticao_texto,
                 meta_nome_autor,
                 meta_id_autor,
@@ -40,6 +39,7 @@ def index():
             
         except Exception as e:
             logging.error(f"Erro ao processar petição: {e}")
-            return render_template('index.html', resultado=None, excecao=str(e))
+            excecao = str(e)
+            return render_template('index.html', resultado=None, excecao=excecao)
 
-    return render_template('index.html', resultado=resultado)
+    return render_template('index.html', resultado=resultado, excecao=excecao)
