@@ -15,7 +15,7 @@ def normalizar_id(id_val):
     s = str(id_val)
     apenas_digitos = re.sub(r"[^\d]", "", s)
 
-    return str(int(apenas_digitos)) if apenas_digitos else ""
+    return apenas_digitos if apenas_digitos else ""
 
 
 def normalizar_nome(nome):
@@ -87,11 +87,12 @@ def peticao_contem_metadados(
     for ent in entidades_extraidas:
         if ent["label"] in ["CPF", "CNPJ"]:
             pool_ids_encontrados.add(normalizar_id(ent["texto"]))
-        elif ent["label"] in ["PESSOA", "ORGANIZACAO"]:
+        elif ent["label"] in ["PESSOA", "ORGANIZACAO", "LOCAL"]:
             pool_nomes_encontrados_bruto.add(normalizar_nome(ent["texto"]))
 
     lista_nomes_ordenada = sorted(list(pool_nomes_encontrados_bruto), key=len, reverse=True)
     pool_nomes_encontrados = set()
+
     for nome in lista_nomes_ordenada:
         if not any(nome in nome_maior for nome_maior in pool_nomes_encontrados):
             pool_nomes_encontrados.add(nome)
